@@ -1,0 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TriggerBox : MonoBehaviour
+{
+    [SerializeField] int id;
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.TryGetComponent(out SushiObject suShi))
+        {
+            if(suShi.id == id)
+            {
+                suShi.isTrigger = true;
+                suShi.onComplate += TeleToPoint;
+            }
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out SushiObject suShi))
+        {
+            if (suShi.id == id)
+            {
+                suShi.isTrigger = false;
+                suShi.onComplate -= TeleToPoint;
+            }
+        }
+    }
+    private void TeleToPoint(Transform sushi)
+    {
+        sushi.position = transform.position;
+    }
+}

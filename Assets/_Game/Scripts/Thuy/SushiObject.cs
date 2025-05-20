@@ -1,18 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class SushiObject : MonoBehaviour
+public class SushiObject : SushiBase
 {
-    // Start is called before the first frame update
-    void Start()
+    public int id = -1;
+    public Action<Transform> onComplate;
+    public bool isTrigger;
+    public override void OnPointerDown(PointerEventData eventData)
     {
-        
+        base.OnPointerDown(eventData);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnPointerMove(PointerEventData eventData)
     {
-        
+        base.OnPointerMove(eventData);
+        if(isTouch)
+        {
+            transform.position = GetMousePositionInScreen();
+        }
+    }
+
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        base.OnPointerUp(eventData);
+        if (isTrigger)
+            onComplate?.Invoke(transform);
     }
 }
