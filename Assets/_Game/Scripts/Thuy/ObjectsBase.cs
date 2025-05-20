@@ -12,12 +12,14 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public bool isTrigger;
     protected bool isTouch;
     protected bool isComplete;
-
+    private SpriteRenderer sprite;
     public virtual void OnPointerDown(PointerEventData eventData)
     {
         if (isComplete) return;
         isTouch = true;
        transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
+        sprite.sortingOrder += 1;
+        Audio.Instance.PlaySFX("Bubble");
     }
 
     public virtual void OnMouseDrag()
@@ -33,6 +35,7 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if(isComplete) return;
         isTouch = false;
         transform.localScale -= new Vector3(0.1f, 0.1f, 0.1f);
+        sprite.sortingOrder -= 1;
     }
     protected Vector3 GetMousePositionInScreen()
     {
@@ -47,9 +50,11 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         isComplete = true;
         transform.DOScale((transform.localScale - new Vector3(0.01f, 0.01f, 0.1f)),1);
+        Audio.Instance.PlaySFX("Complete");
     }
     protected virtual void Awake()
     {
+        sprite = GetComponent<SpriteRenderer>();
         onComplete += OnComplete;
     }
 }
