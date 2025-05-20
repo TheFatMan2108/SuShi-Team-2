@@ -30,7 +30,7 @@ public class StickObject : ObjectsBase
     public override void OnPointerUp(PointerEventData eventData)
     {
         base.OnPointerUp(eventData);
-        if (isTrigger)
+        if (isTrigger && !isComplete)
             onComplete?.Invoke(transform);
         if (isComplete) return;
         transform.DOLocalRotate(oldEulerAngles, 0.3f, RotateMode.Fast);
