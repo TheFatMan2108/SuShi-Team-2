@@ -5,15 +5,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SushiObject : ObjectsBase
+public class StickObject : ObjectsBase
 {
+    private Vector3 oldEulerAngles;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        oldEulerAngles = transform.localEulerAngles;
+    }
+
     public override void OnPointerDown(PointerEventData eventData)
     {
         if (isComplete) return;
         base.OnPointerDown(eventData);
-        transform.DOLocalRotate(new Vector3(0, 0, 4), 1).SetLoops(1, LoopType.Yoyo);
+        if(transform.eulerAngles.magnitude != 0)
+        {
+            transform.DOLocalRotate(Vector3.zero,0.3f,RotateMode.Fast);
+        }
     }
 
+   
 
     public override void OnPointerUp(PointerEventData eventData)
     {
@@ -21,12 +33,6 @@ public class SushiObject : ObjectsBase
         if (isTrigger)
             onComplete?.Invoke(transform);
         if (isComplete) return;
-        transform.DOLocalRotate(new Vector3(0, 0, 0), 1).SetLoops(1, LoopType.Yoyo);
-    }
-
-    public override void OnMouseDrag()
-    {
-        base.OnMouseDrag();
-
+        transform.DOLocalRotate(oldEulerAngles, 0.3f, RotateMode.Fast);
     }
 }
