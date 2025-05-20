@@ -18,7 +18,7 @@ public class SushiObject : ObjectsBase
     public override void OnPointerUp(PointerEventData eventData)
     {
         base.OnPointerUp(eventData);
-        if (isTrigger)
+        if (isTrigger&&!isComplete)
             onComplete?.Invoke(transform);
         if (isComplete) return;
         transform.DOLocalRotate(new Vector3(0, 0, 0), 1).SetLoops(1, LoopType.Yoyo);

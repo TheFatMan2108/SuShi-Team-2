@@ -15,7 +15,8 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-       isTouch = true;
+        if (isComplete) return;
+        isTouch = true;
        transform.localScale += new Vector3(0.1f, 0.1f, 0.1f);
     }
 
@@ -29,6 +30,7 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public virtual void OnPointerUp(PointerEventData eventData)
     {
+        if(isComplete) return;
         isTouch = false;
         transform.localScale -= new Vector3(0.1f, 0.1f, 0.1f);
     }
@@ -41,7 +43,11 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         myMouse = Camera.main.ScreenToWorldPoint(screenPoint);
         return myMouse;
     }
-    private void OnComplete(Transform transform)=>isComplete = true;
+    private void OnComplete(Transform transform)
+    {
+        isComplete = true;
+        transform.localScale -= new Vector3(0.15f, 0.15f, 0.1f);
+    }
     protected virtual void Awake()
     {
         onComplete += OnComplete;
