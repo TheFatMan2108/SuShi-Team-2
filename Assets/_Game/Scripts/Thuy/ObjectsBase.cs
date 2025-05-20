@@ -46,7 +46,7 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void OnComplete(Transform transform)
     {
         isComplete = true;
-        transform.localScale -= new Vector3(0.15f, 0.15f, 0.1f);
+        transform.DOScale(new Vector3(0.85f, 0.85f, 0.1f),1);
     }
     protected virtual void Awake()
     {
