@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
@@ -13,6 +14,7 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     protected bool isTouch;
     protected bool isComplete;
     private SpriteRenderer sprite;
+    private Collider2D collider;
     public virtual void OnPointerDown(PointerEventData eventData)
     {
         if (isComplete) return;
@@ -21,7 +23,14 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         sprite.sortingOrder += 1;
         Audio.Instance.PlaySFX("Bubble");
     }
-
+    private void OnEnable()
+    {
+        GameManager.Ins.AddObjectBase(this);
+    }
+    private void OnDisable()
+    {
+        GameManager.Ins.RemoveObjectBase(this);
+    }
     public virtual void OnMouseDrag()
     {
         if (isTouch&&!isComplete)
@@ -51,10 +60,23 @@ public class ObjectsBase : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         isComplete = true;
         transform.DOScale((transform.localScale - new Vector3(0.01f, 0.01f, 0.1f)),1);
         Audio.Instance.PlaySFX("Complete");
+        collider.enabled = false;
+        if (GameManager.Ins.OnComplete())
+        {
+            // event win
+            Debug.Log("Win");
+            GameManager.Ins.GetTopTr().DOMove(new Vector3(0, 1.6f, 0), 1).SetEase(Ease.Linear).OnComplete(() =>
+            {
+                //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex
+                //
+            });
+        }
     }
     protected virtual void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
+        collider = GetComponent<Collider2D>();
         onComplete += OnComplete;
     }
+    public bool GetIsComplete()=>isComplete;
 }
